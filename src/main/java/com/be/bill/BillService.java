@@ -1,7 +1,6 @@
 package com.be.bill;
 
-import com.be.building.BuildingEntity;
-import com.be.building.BuildingRepository;
+import com.be.dto.response.AmountResponse;
 import com.be.dto.response.BillInfoResponse;
 import com.be.email.EmailDetail;
 import com.be.email.EmailService;
@@ -67,7 +66,7 @@ public class BillService {
         billEntity.setTimeStart(timeStart);
         billEntity.setTimeEnd(timeEnd);
         billEntity.setCompleteStatus(false);
-        if (request.getPayment().toLowerCase() == "paypal") {
+        if (request.getPayment().equals("PayPal")) {
             billEntity.setBillStatus(BillStatus.ADMIN_RECEIVED);
             billEntity.setPayment(Payment.PAYPAL);
         } else {
@@ -119,14 +118,18 @@ public class BillService {
     public void confirmComplete(long id) {
         BillEntity bill = billRepository.findById(id).orElse(null);
         bill.setCompleteStatus(true);
-        bill.setBillStatus(BillStatus.STAFF_RECEIVED);
+        if (bill.getPayment() == Payment.PAYPAL) {
+            bill.setBillStatus(BillStatus.ADMIN_RECEIVED);
+        } else {
+            bill.setBillStatus(BillStatus.STAFF_RECEIVED);
+        }
         billRepository.save(bill);
     }
 
     public List<BillInfoResponse> getEmployeeHistory(long id) {
         List<BillEntity> list = billRepository.getEmployeeHistory(id);
         List<BillInfoResponse> responseList = new ArrayList<>();
-        for (BillEntity billEntity: list){
+        for (BillEntity billEntity : list) {
             responseList.add(billMapper.mapBill(billEntity));
         }
         return responseList;
@@ -141,7 +144,7 @@ public class BillService {
     public List<BillInfoResponse> getAllBills() {
         List<BillEntity> list = billRepository.getAllBills();
         List<BillInfoResponse> responseList = new ArrayList<>();
-        for (BillEntity billEntity: list){
+        for (BillEntity billEntity : list) {
             responseList.add(billMapper.mapBill(billEntity));
         }
         return responseList;
@@ -150,7 +153,7 @@ public class BillService {
     public List<BillInfoResponse> getSchedule(long id) {
         List<BillEntity> list = billRepository.getEmployeeSchedule(id);
         List<BillInfoResponse> responseList = new ArrayList<>();
-        for (BillEntity billEntity: list){
+        for (BillEntity billEntity : list) {
             responseList.add(billMapper.mapBill(billEntity));
         }
         return responseList;
@@ -159,15 +162,16 @@ public class BillService {
     public List<BillInfoResponse> getCustomerBill(long id) {
         List<BillEntity> list = billRepository.getCustomerBills(id);
         List<BillInfoResponse> responseList = new ArrayList<>();
-        for (BillEntity billEntity: list){
+        for (BillEntity billEntity : list) {
             responseList.add(billMapper.mapBill(billEntity));
         }
         return responseList;
     }
+
     public List<BillInfoResponse> getCustomerHistory(long id) {
         List<BillEntity> list = billRepository.getHistoryBills(id);
         List<BillInfoResponse> responseList = new ArrayList<>();
-        for (BillEntity billEntity: list){
+        for (BillEntity billEntity : list) {
             responseList.add(billMapper.mapBill(billEntity));
         }
         return responseList;
@@ -185,9 +189,24 @@ public class BillService {
     public List<BillInfoResponse> getAcceptedOrder(long id) {
         List<BillEntity> list = billRepository.getAcceptedBills(id);
         List<BillInfoResponse> responseList = new ArrayList<>();
-        for (BillEntity billEntity: list){
+        for (BillEntity billEntity : list) {
             responseList.add(billMapper.mapBill(billEntity));
         }
         return responseList;
+    }
+
+    public List<AmountResponse> getAmountByWeek() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate monday = currentDate.minusDays(currentDate.getDayOfWeek().getValue() - 1);
+        LocalDate sunday = currentDate.plusDays(7 - currentDate.getDayOfWeek().getValue());
+
+        List<AmountResponse> list = new ArrayList<>();
+        list.add(new AmountResponse("Đơn bị hủy", billRepository.getCancelBillsNumber(monday, sunday)));
+        list.add(new AmountResponse("Đơn hoàn thành", billRepository.getCompleteBillsNumber(monday, sunday)));
+        list.add(new AmountResponse("Thu nhập", billRepository.getIncome(monday, sunday)));
+        list.add(new AmountResponse("Nhân viên", userRepository.getEmployeeNumber()));
+        list.add(new AmountResponse("Khách hàng", userRepository.getEmployeeNumber()));
+
+        return list;
     }
 }

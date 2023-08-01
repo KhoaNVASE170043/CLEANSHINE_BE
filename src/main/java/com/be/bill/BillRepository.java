@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -30,4 +31,12 @@ public interface BillRepository extends JpaRepository<BillEntity, Long> {
 
     @Query("SELECT b from BillEntity b WHERE b.billStatus <> com.be.status.BillStatus.CUSTOMER_DENY")
     List<BillEntity> getAllBills();
+    @Query("SELECT count(b) from BillEntity b WHERE (b.billStatus = com.be.status.BillStatus.CUSTOMER_DENY or b.billStatus = com.be.status.BillStatus.ADMIN_DENY) and b.dateOrder between :monday and :sunday")
+    long getCancelBillsNumber(@Param("monday")LocalDate monday, @Param("sunday")LocalDate sunday);
+
+    @Query("SELECT count(b) from BillEntity b WHERE b.completeStatus = true and b.dateOrder between :monday and :sunday")
+    long getCompleteBillsNumber(@Param("monday")LocalDate monday, @Param("sunday")LocalDate sunday);
+
+    @Query("SELECT count(b.serviceDetail.price) from BillEntity b WHERE b.completeStatus = true and b.dateOrder between :monday and :sunday")
+    long getIncome(@Param("monday")LocalDate monday, @Param("sunday")LocalDate sunday);
 }

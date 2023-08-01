@@ -1,6 +1,7 @@
 package com.be.controller;
 import com.be.bill.*;
 import com.be.dto.request.*;
+import com.be.dto.response.AmountResponse;
 import com.be.dto.response.BillInfoResponse;
 import com.be.dto.response.CustomerInfoResponse;
 import com.be.user.UserService;
@@ -63,5 +64,7 @@ public class CustomerController {
         List<BillInfoResponse> list = billService.getCustomerHistory(requestInfo.getId());
         return ResponseEntity.ok(list);
     }
+
+
 
 }

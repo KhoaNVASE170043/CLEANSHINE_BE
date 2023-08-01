@@ -5,6 +5,7 @@ import com.be.address.AddressRepository;
 import com.be.auth.AuthenticationService;
 import com.be.bill.BillEntity;
 import com.be.bill.BillService;
+import com.be.dto.response.AmountResponse;
 import com.be.dto.response.BillInfoResponse;
 import com.be.dto.response.CustomerInfoResponse;
 import com.be.service.ServiceEntity;
@@ -176,5 +177,10 @@ public class AdminController {
     public ResponseEntity<?> getFreeEmployeesByService(@RequestBody AssignEmployeeRequest assignEmployeeRequest) {
         List<WorkEntity> freeEmployeeList = userService.getFreeEmployees(assignEmployeeRequest);
         return ResponseEntity.ok(freeEmployeeList);
+    }
+    @GetMapping("/amount")
+    public ResponseEntity<?> getAmountByWeek(){
+        List<AmountResponse> list = billService.getAmountByWeek();
+        return ResponseEntity.ok(list);
     }
 }
