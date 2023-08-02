@@ -39,4 +39,7 @@ public interface BillRepository extends JpaRepository<BillEntity, Long> {
 
     @Query("SELECT count(b.serviceDetail.price) from BillEntity b WHERE b.completeStatus = true and b.dateOrder between :monday and :sunday")
     long getIncome(@Param("monday")LocalDate monday, @Param("sunday")LocalDate sunday);
+
+    @Query("select count(b) from BillEntity b where b.serviceDetail.service.id = :id and b.dateOrder between :monday and :sunday")
+    long getServiceAmount(@Param("id")long id, @Param("monday")LocalDate monday, @Param("sunday")LocalDate sunday);
 }

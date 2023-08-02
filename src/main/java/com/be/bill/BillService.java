@@ -9,6 +9,8 @@ import com.be.dto.request.BillUpdateRequest;
 import com.be.mapper.BillMapper;
 import com.be.room.RoomEntity;
 import com.be.room.RoomRepository;
+import com.be.service.ServiceEntity;
+import com.be.service.ServiceRepository;
 import com.be.service_detail.ServiceDetailEntity;
 import com.be.service_detail.ServiceDetailRepository;
 import com.be.status.BillStatus;
@@ -35,6 +37,8 @@ public class BillService {
 
     private BillMapper billMapper;
     private RoomRepository roomRepository;
+
+    private ServiceRepository serviceRepository;
 
     public void assignEmployee(BillUpdateRequest billUpdateRequest) {
         UserEntity employee = userRepository.findById(billUpdateRequest.getEmployeeId());
@@ -206,7 +210,12 @@ public class BillService {
         list.add(new AmountResponse("Thu nhập", billRepository.getIncome(monday, sunday)));
         list.add(new AmountResponse("Nhân viên", userRepository.getEmployeeNumber()));
         list.add(new AmountResponse("Khách hàng", userRepository.getEmployeeNumber()));
-
+        List<ServiceEntity> serviceEntities = serviceRepository.findAll();
+        for(ServiceEntity service:serviceEntities){
+            AmountResponse amountResponse = new AmountResponse(service.getName(),
+                    billRepository.getServiceAmount(service.getId(), monday, sunday));
+            list.add(amountResponse);
+        }
         return list;
     }
 }
