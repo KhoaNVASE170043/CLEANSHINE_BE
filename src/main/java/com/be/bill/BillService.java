@@ -1,5 +1,6 @@
 package com.be.bill;
 
+import com.be.dto.request.DateRequest;
 import com.be.dto.response.AmountResponse;
 import com.be.dto.response.BillInfoResponse;
 import com.be.email.EmailDetail;
@@ -77,11 +78,11 @@ public class BillService {
             billEntity.setBillStatus(BillStatus.CUSTOMER_UNPAID);
             billEntity.setPayment(Payment.COD);
         }
-//        EmailDetail emailDetail = new EmailDetail();
-//        emailDetail.setRecipient(customer.getEmail());
-//        emailDetail.setSubject("Đặt hàng thành công!");
-//        emailDetail.setMsgBody("aaa");
-//        emailService.sendMailTemplate(emailDetail, serviceDetail.getName(), customer.getName());
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setRecipient(customer.getEmail());
+        emailDetail.setSubject("Đặt hàng thành công!");
+        emailDetail.setMsgBody("aaa");
+        emailService.sendMailTemplate(emailDetail, serviceDetail.getName(), customer.getName());
         billRepository.save(billEntity);
         return true;
     }
@@ -199,11 +200,9 @@ public class BillService {
         return responseList;
     }
 
-    public List<AmountResponse> getAmountByWeek() {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate monday = currentDate.minusDays(currentDate.getDayOfWeek().getValue() - 1);
-        LocalDate sunday = currentDate.plusDays(7 - currentDate.getDayOfWeek().getValue());
-
+    public List<AmountResponse> getAmountByWeek(DateRequest dateRequest) {
+        LocalDate monday = convertToDate(dateRequest.getDateStart());
+        LocalDate sunday = convertToDate(dateRequest.getDateEnd());
         List<AmountResponse> list = new ArrayList<>();
         list.add(new AmountResponse("Đơn bị hủy", billRepository.getCancelBillsNumber(monday, sunday)));
         list.add(new AmountResponse("Đơn hoàn thành", billRepository.getCompleteBillsNumber(monday, sunday)));
@@ -211,7 +210,7 @@ public class BillService {
         list.add(new AmountResponse("Nhân viên", userRepository.getEmployeeNumber()));
         list.add(new AmountResponse("Khách hàng", userRepository.getEmployeeNumber()));
         List<ServiceEntity> serviceEntities = serviceRepository.findAll();
-        for(ServiceEntity service:serviceEntities){
+        for (ServiceEntity service : serviceEntities) {
             AmountResponse amountResponse = new AmountResponse(service.getName(),
                     billRepository.getServiceAmount(service.getId(), monday, sunday));
             list.add(amountResponse);

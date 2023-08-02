@@ -178,9 +178,9 @@ public class AdminController {
         List<WorkEntity> freeEmployeeList = userService.getFreeEmployees(assignEmployeeRequest);
         return ResponseEntity.ok(freeEmployeeList);
     }
-    @GetMapping("/amount")
-    public ResponseEntity<?> getAmountByWeek(){
-        List<AmountResponse> list = billService.getAmountByWeek();
+    @PostMapping("/amount")
+    public ResponseEntity<?> getAmountByWeek(@RequestBody DateRequest dateRequest){
+        List<AmountResponse> list = billService.getAmountByWeek(dateRequest);
         return ResponseEntity.ok(list);
     }
 }
