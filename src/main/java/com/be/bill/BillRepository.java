@@ -34,7 +34,7 @@ public interface BillRepository extends JpaRepository<BillEntity, Long> {
     @Query("SELECT count(b) from BillEntity b WHERE (b.billStatus = com.be.status.BillStatus.CUSTOMER_DENY or b.billStatus = com.be.status.BillStatus.ADMIN_DENY) and b.dateOrder between :monday and :sunday")
     long getCancelBillsNumber(@Param("monday")LocalDate monday, @Param("sunday")LocalDate sunday);
 
-    @Query("SELECT count(b) from BillEntity b WHERE b.completeStatus = true and b.dateOrder between :monday and :sunday")
+    @Query("SELECT count(b)  from BillEntity b WHERE b.completeStatus = true and b.dateOrder between :monday and :sunday")
     long getCompleteBillsNumber(@Param("monday")LocalDate monday, @Param("sunday")LocalDate sunday);
 
     @Query("SELECT sum(b.serviceDetail.price) from BillEntity b WHERE b.completeStatus = true and b.dateOrder between :monday and :sunday")
