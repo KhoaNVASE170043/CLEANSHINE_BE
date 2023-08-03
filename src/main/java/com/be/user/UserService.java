@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -145,7 +146,7 @@ public class UserService {
 
     public boolean checkFreeEmployee(List<BillEntity> list, LocalDate dateImplement) {
         for (BillEntity billEntity : list) {
-            if (billEntity.getDateImplement() == dateImplement) {
+            if (billEntity.getDateImplement().isEqual(dateImplement)) {
                 return false;
             }
         }
@@ -158,7 +159,7 @@ public class UserService {
         LocalDate dateImp = billService.convertToDate(assignEmployeeRequest.getDateImplement());
         List<WorkEntity> listFree = new ArrayList<>();
         for (WorkEntity emp : listEmployee) {
-            long id = emp.getId();
+            long id = emp.getEmployeeInfo().getId();
             List<BillEntity> listBill = billRepository.getEmployeeSchedule(id);
             if (listBill.size() == 0 || checkFreeEmployee(listBill, dateImp)) {
                 listFree.add(emp);

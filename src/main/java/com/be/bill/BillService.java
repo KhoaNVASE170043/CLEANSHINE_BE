@@ -60,6 +60,7 @@ public class BillService {
         billEntity.setCustomer(customer);
         ServiceDetailEntity serviceDetail = serviceDetailRepository.findById(request.getServiceDetailId()).orElse(null);
         RoomEntity room = roomRepository.findById(request.getRoomId()).orElse(null);
+        billEntity.setNote(request.getNote());
         billEntity.setRoom(room);
         billEntity.setServiceDetail(serviceDetail);
         LocalDate dateOrder = convertToDate(request.getDateOrder());

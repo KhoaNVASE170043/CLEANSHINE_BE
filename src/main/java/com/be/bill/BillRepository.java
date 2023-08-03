@@ -23,7 +23,7 @@ public interface BillRepository extends JpaRepository<BillEntity, Long> {
     @Query("SELECT b from BillEntity b WHERE b.completeStatus = true and b.employee.id = :employee_id")
     List<BillEntity> getEmployeeHistory(@Param("employee_id") long employee_id);
 
-    @Query("SELECT b from BillEntity b WHERE b.completeStatus = false and b.billStatus = com.be.status.BillStatus.ADMIN_ASSIGN and b.employee.id = :employee_id")
+    @Query("SELECT b from BillEntity b WHERE b.employee.id = :employee_id and b.billStatus = com.be.status.BillStatus.ADMIN_ASSIGN")
     List<BillEntity> getEmployeeSchedule(@Param("employee_id") long employee_id);
 
     @Query("SELECT b from BillEntity b WHERE b.completeStatus = false and b.billStatus = com.be.status.BillStatus.STAFF_ACCEPT and b.employee.id = :employee_id")
