@@ -160,7 +160,7 @@ public class UserService {
         List<WorkEntity> listFree = new ArrayList<>();
         for (WorkEntity emp : listEmployee) {
             long id = emp.getEmployeeInfo().getId();
-            List<BillEntity> listBill = billRepository.getEmployeeSchedule(id);
+            List<BillEntity> listBill = billRepository.getEmployeeScheduleAndHistory(id);
             if (listBill.size() == 0 || checkFreeEmployee(listBill, dateImp)) {
                 listFree.add(emp);
             }
