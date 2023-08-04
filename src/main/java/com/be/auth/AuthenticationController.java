@@ -3,7 +3,6 @@ package com.be.auth;
 import com.be.config.LogoutService;
 import com.be.dto.request.CustomerRegisterRequest;
 import com.be.dto.response.LoginResponse;
-import com.be.user.UserEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,6 @@
 package com.be.controller;
 
-import com.be.address.AddressEntity;
-import com.be.address.AddressRepository;
 import com.be.auth.AuthenticationService;
-import com.be.bill.BillEntity;
 import com.be.bill.BillService;
 import com.be.dto.response.AmountResponse;
 import com.be.dto.response.BillInfoResponse;
@@ -14,7 +11,6 @@ import com.be.service.ServiceService;
 import com.be.dto.request.*;
 import com.be.service_detail.ServiceDetailEntity;
 import com.be.service_detail.ServiceDetailService;
-import com.be.user.UserEntity;
 import com.be.user.UserService;
 import com.be.work.WorkEntity;
 import com.be.work.WorkRepository;
@@ -31,7 +27,6 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 @AllArgsConstructor
 public class AdminController {
-    private AddressRepository addressRepository;
     private UserService userService;
     private WorkRepository workRepository;
     private AuthenticationService authenticationService;

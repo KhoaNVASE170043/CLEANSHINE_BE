@@ -209,7 +209,7 @@ public class BillService {
         list.add(new AmountResponse("Đơn hoàn thành", billRepository.getCompleteBillsNumber(monday, sunday)));
         list.add(new AmountResponse("Thu nhập", billRepository.getIncome(monday, sunday)));
         list.add(new AmountResponse("Nhân viên", userRepository.getEmployeeNumber()));
-        list.add(new AmountResponse("Khách hàng", userRepository.getEmployeeNumber()));
+        list.add(new AmountResponse("Khách hàng", userRepository.getCustomerNumber()));
         List<ServiceEntity> serviceEntities = serviceRepository.findAll();
         for (ServiceEntity service : serviceEntities) {
             AmountResponse amountResponse = new AmountResponse(service.getName(),

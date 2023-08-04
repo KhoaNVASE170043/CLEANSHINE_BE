@@ -39,8 +39,9 @@ public class ServiceDetailService {
         serviceDetail.setPrice(editServiceDetailRequest.getPrice());
         serviceDetailRepository.save(serviceDetail);
     }
-    public List<ServiceDetailEntity> getAllServiceDetails(){
-        List<ServiceDetailEntity> list = serviceDetailRepository.findAll();
-        return list;
+
+    public List<ServiceDetailEntity> getAllServiceDetails() {
+
+        return serviceDetailRepository.findAll();
     }
 }

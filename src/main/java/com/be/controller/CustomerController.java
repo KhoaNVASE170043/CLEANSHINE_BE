@@ -1,7 +1,6 @@
 package com.be.controller;
 import com.be.bill.*;
 import com.be.dto.request.*;
-import com.be.dto.response.AmountResponse;
 import com.be.dto.response.BillInfoResponse;
 import com.be.dto.response.CustomerInfoResponse;
 import com.be.user.UserService;
@@ -37,7 +36,7 @@ public class CustomerController {
     @PostMapping("/create-bill")
     public ResponseEntity<?> createBill(@RequestBody BillCreateRequest billCreateRequest) {
         boolean check = billService.createBill(billCreateRequest);
-        if (check == false) {
+        if (!check) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok("Đặt hàng thành công");
